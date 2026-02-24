@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>La Rivera – Create Account</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+  <nav class="nav container">
+    <div class="brand">La <em>Rivera</em></div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="login.html">Sign In</a>
+    </div>
+  </nav>
+
+  <div class="form">
+    <h2 style="margin:.25rem 0 1rem">Create Account</h2>
+    <div class="field"><label>Name</label><input id="name" class="input" type="text" required/></div>
+    <div class="field"><label>Email</label><input id="email" class="input" type="email" required/></div>
+    <div class="field"><label>Password</label><input id="password" class="input" type="password" required/></div>
+    <div class="actions"><button class="btn" id="signupBtn">Create Account</button><a class="link" href="login.html">Already have an account?</a></div>
+    <div id="msg" class="sub" style="color:#f59e0b;margin-top:.5rem"></div>
+  </div>
+
+  <script type="module">
+    import { apiPost } from './js/api.js';
+    const msg = document.getElementById('msg');
+    document.getElementById('signupBtn').onclick = async () => {
+      msg.textContent = '';
+      try {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const data = await apiPost('/api/auth/signup', { name, email, password });
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        window.location.href = 'catalog.html';
+      } catch(e){ msg.textContent = e.message; }
+    }
+  </script>
+</body>
+</html>

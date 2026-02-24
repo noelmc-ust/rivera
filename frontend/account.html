@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>La Rivera – My Account</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+  <nav class="nav container">
+    <div class="brand">La <em>Rivera</em></div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="orders.html">Orders</a>
+      <a href="#" id="logout">Logout</a>
+    </div>
+  </nav>
+
+  <section class="container">
+    <div class="topbar">
+      <div><div class="badge">Welcome back</div><h2 style="margin:.25rem 0 0">My Account</h2></div>
+    </div>
+    <div class="form" style="max-width:520px">
+      <div class="field"><label>Name</label><input id="name" class="input" type="text" readonly/></div>
+      <div class="field"><label>Email</label><input id="email" class="input" type="email" readonly/></div>
+      <div class="field"><label>Member since</label><input id="since" class="input" type="text" readonly/></div>
+      <div class="actions"><a class="btn" href="orders.html">View Orders</a><a class="btn ghost" href="catalog.html">Continue Shopping</a></div>
+    </div>
+  </section>
+
+  <footer class="footer container">© La Rivera.</footer>
+
+  <script type="module">
+    import { apiGet } from './js/api.js';
+    const token = localStorage.getItem('token'); if(!token){ window.location.href = 'login.html'; }
+    document.getElementById('logout').onclick = () => { localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = 'index.html'; };
+    const fmtDate = iso => { try{ return new Date(iso).toLocaleDateString(); } catch { return iso; } };
+    (async function(){
+      try {
+        const { user } = await apiGet('/api/me', true);
+        document.getElementById('name').value = user.name;
+        document.getElementById('email').value = user.email;
+        document.getElementById('since').value = fmtDate(user.created_at);
+      } catch { alert('Session expired. Please sign in again.'); window.location.href='login.html'; }
+    })();
+  </script>
+</body>
+</html>

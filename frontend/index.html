@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>La Rivera – Elegance in Every Stitch</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+  <nav class="nav container">
+    <div class="brand">La <em>Rivera</em></div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="login.html">Sign In</a>
+      <a href="signup.html">Create Account</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <div>
+        <div class="kicker">New Season • SS26</div>
+        <h1 class="h1">Elegance in Every Stitch</h1>
+        <p class="sub">Discover refined silhouettes and luxurious fabrics crafted for modern women.
+          La Rivera celebrates quiet luxury—timeless pieces designed to be worn, cherished, and remembered.</p>
+        <div class="ctas">
+          <a class="btn" href="catalog.html">Shop Dresses</a>
+          <a class="btn ghost" href="signup.html">Join La Rivera</a>
+        </div>
+      </div>
+      <div>
+        <img class="hero-img" src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop" alt="Elegant dress">
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="topbar">
+      <div class="badge">Signature Collection</div>
+      <a class="link" href="catalog.html">Explore the catalog →</a>
+    </div>
+    <div class="grid" id="home-grid"></div>
+  </section>
+
+  <footer class="footer container">© La Rivera. Crafted with care.</footer>
+
+  <script type="module">
+    // Preview a few products on the landing
+    (async function(){
+      try {
+        const res = await fetch('/api/products');
+        const data = await res.json();
+        const grid = document.getElementById('home-grid');
+        grid.innerHTML = '';
+        (data.products||[]).slice(0,4).forEach(p=>{
+          const el = document.createElement('div');
+          el.className='card';
+          el.innerHTML = `
+            <img src="${p.image_url}" alt="${p.name}"/>
+            <div class="pad">
+              <div style="font-weight:700">${p.name}</div>
+              <div class="sub" style="font-size:.9rem;margin:.25rem 0 .5rem">${p.description||''}</div>
+              <div class="price">₹${(p.price_cents/100).toFixed(2)}</div>
+            </div>`;
+          grid.appendChild(el);
+        });
+      } catch(e) { /* ignore */ }
+    })();
+  </script>
+</body>
+</html>
